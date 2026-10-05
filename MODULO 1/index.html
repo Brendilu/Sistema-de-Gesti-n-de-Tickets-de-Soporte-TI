@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Módulo 1 · Autenticación y usuarios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="brand"><span class="logo">A</span>Atlas Soporte · Módulo 1</div>
+
+        <!-- LOGIN -->
+        <div class="view on" id="v-login">
+            <div class="lg-box">
+                <div class="hd">
+                    <h2>Iniciar sesión</h2>
+                    <p>Acceso con correo corporativo y token JWT.</p>
+                </div>
+                <div class="alert-bad" id="loginError">Credenciales incorrectas.</div>
+                <div class="card">
+                    <div class="f"><label for="em">Correo</label><input id="em" class="in"
+                            value="laura.medina@empresa.com"></div>
+                    <div class="f"><label for="pw">Contraseña</label><input id="pw" type="password" class="in"
+                            value="password1"></div>
+                    <button class="btn p" style="width:100%;padding:11px" onclick="login()">Entrar</button>
+                    <p class="switchview">¿No tienes cuenta? <button onclick="go('registro')">Registrarte</button></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- REGISTRO -->
+        <div class="view" id="v-registro">
+            <div class="lg-box">
+                <div class="hd">
+                    <h2>Crear cuenta</h2>
+                    <p>Se registra con rol "Usuario" por defecto; un administrador puede cambiarlo luego.</p>
+                </div>
+                <div class="card">
+                    <div class="f"><label for="rn">Nombre completo</label><input id="rn" class="in"
+                            placeholder="Ej. Carlos Vega"></div>
+                    <div class="f"><label for="re">Correo</label><input id="re" class="in"
+                            placeholder="correo@empresa.com"></div>
+                    <div class="f"><label for="rp">Contraseña</label><input id="rp" type="password" class="in"></div>
+                    <button class="btn p" style="width:100%;padding:11px" onclick="registrar()">Crear cuenta</button>
+                    <p class="switchview"><button onclick="go('login')">← Volver a iniciar sesión</button></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- GESTIÓN DE USUARIOS (solo admin) -->
+        <div class="view" id="v-usuarios">
+            <div class="guard" id="guardMsg">⚠ Acceso denegado: esta vista requiere token JWT con rol
+                <b>Administrador</b>.</div>
+            <div class="top-row">
+                <div class="hd" style="margin-bottom:0">
+                    <h2>Usuarios y roles</h2>
+                    <p>Sesión activa: <b id="whoami">—</b></p>
+                </div>
+                <button class="btn" onclick="logout()">Cerrar sesión</button>
+            </div>
+            <div class="card tw" style="padding:6px">
+                <table id="userTable"></table>
+            </div>
+            <div class="tech"><span>Flask-JWT</span><span>bcrypt</span><span>@role_required</span><span>Tabla
+                    users</span><span>Todas las rutas requieren token válido</span></div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

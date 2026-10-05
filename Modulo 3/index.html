@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Módulo 3 · Asignación e historial de estados · Atlas Soporte</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+ <aside>
+  <div class="brand"><span class="logo">A</span>Atlas Soporte</div>
+  <small>Módulos del sistema</small>
+  <button class="n"><span class="nu">1</span><span>Autenticación y usuarios</span></button>
+  <button class="n"><span class="nu">2</span><span>Registro de tickets + fotos</span></button>
+  <button class="n on"><span class="nu">3</span><span>Asignación + historial</span></button>
+  <button class="n"><span class="nu">4</span><span>SLA + semáforo visual</span></button>
+  <button class="n"><span class="nu">5</span><span>Notificaciones internas</span></button>
+  <div class="me"><span class="av">TÚ</span><div>Tu nombre<span>Integrante 3</span></div></div>
+ </aside>
+
+ <div>
+  <div class="top">
+   <h1>TCK-0042 · Caída de red</h1>
+   <span class="sp"></span>
+   <span class="pill" id="estadoActualPill">En proceso</span>
+  </div>
+
+  <div class="c">
+   <div class="mh">
+    <span class="mn">3</span>
+    <div style="flex:1">
+     <h2>Módulo 3 · Asignación + historial de estados</h2>
+     <div class="mc">
+      <div>
+       <small>Funcionalidades</small>
+       <p>Asignar técnico, cambiar estado, comentario obligatorio por cambio, línea de tiempo en detalle del ticket.</p>
+      </div>
+      <div>
+       <small>Aspectos técnicos</small>
+       <div class="chips">
+        <span>Tabla ticket_historial</span><span>UPDATE validado</span><span>Timeline con timestamps</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+
+   <div class="hd">
+    <div><h2>TCK-0042 · Caída de red en sede Lima</h2><p>Solicitado por Luis Paz · Ventas · 30/09/2026 08:15</p></div>
+   </div>
+
+   <div class="g3">
+    <div class="card">
+     <h3>Historial de estados</h3>
+     <div class="tl" id="timeline"></div>
+    </div>
+
+    <div class="card" style="align-self:start">
+     <h3>Gestionar ticket</h3>
+     <div class="f">
+      <label for="tecnico">Técnico asignado</label>
+      <select id="tecnico" class="in">
+       <option>Ana Ruiz</option>
+       <option>Carlos Vega</option>
+       <option>Sin asignar</option>
+      </select>
+     </div>
+     <div class="f">
+      <label for="estado">Nuevo estado</label>
+      <select id="estado" class="in">
+       <option>Abierto</option>
+       <option>En proceso</option>
+       <option>Resuelto</option>
+       <option>Cerrado</option>
+      </select>
+     </div>
+     <div class="f">
+      <label for="comentario">Comentario <small class="req">*</small></label>
+      <textarea id="comentario" class="in" placeholder="Describe lo realizado en este cambio"></textarea>
+      <small class="err" id="comentarioErr"></small>
+     </div>
+     <button class="btn p" style="width:100%" onclick="guardarCambio()">Guardar cambio</button>
+     <p class="ok-msg" id="okMsg">✓ Cambio guardado en el historial.</p>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
