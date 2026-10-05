@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Módulo 5 · Notificaciones internas · Atlas Soporte</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app">
+
+        <aside>
+            <div class="brand"><span class="logo">A</span>Atlas Soporte</div>
+            <small>Módulos del sistema</small>
+            <button class="n"><span class="nu">1</span><span>Autenticación y usuarios</span></button>
+            <button class="n"><span class="nu">2</span><span>Registro de tickets + fotos</span></button>
+            <button class="n"><span class="nu">3</span><span>Asignación + historial</span></button>
+            <button class="n"><span class="nu">4</span><span>SLA + semáforo visual</span></button>
+            <button class="n on"><span class="nu">5</span><span>Notificaciones internas</span></button>
+            <div class="me"><span class="av">TÚ</span>
+                <div>Tu nombre<span>Integrante 5</span></div>
+            </div>
+        </aside>
+
+        <div>
+            <div class="top">
+                <h1>Notificaciones</h1>
+                <span class="sp"></span>
+                <div class="search">Buscar ticket, usuario…</div>
+                <div class="bellw">
+                    <button class="bell" id="bell" aria-label="Notificaciones">🔔<em id="cnt">0</em></button>
+                    <div class="dd" id="dd">
+                        <header>Notificaciones <button id="marcarTodasDd">Marcar todas como leídas</button></header>
+                        <div id="ddl"></div>
+                    </div>
+                </div>
+                <span class="av">TÚ</span>
+            </div>
+
+            <div class="c">
+                <div class="mh">
+                    <span class="mn">5</span>
+                    <div style="flex:1">
+                        <h2>Módulo 5 · Notificaciones internas</h2>
+                        <div class="mc">
+                            <div>
+                                <small>Funcionalidades</small>
+                                <p>Campana con contador, generación de notificación en eventos clave, marcar como leída.
+                                </p>
+                            </div>
+                            <div>
+                                <small>Aspectos técnicos</small>
+                                <div class="chips">
+                                    <span>Tabla notificaciones</span>
+                                    <span>AJAX/fetch para el contador</span>
+                                    <span>UPDATE masivo o individual</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hd">
+                    <div>
+                        <h2>Notificaciones</h2>
+                        <p>Actividad reciente en tus tickets.</p>
+                    </div>
+                    <button class="btn" id="marcarTodas">Marcar todas como leídas</button>
+                </div>
+                <div class="card" style="padding:8px" id="nl"></div>
+
+                <div class="card" style="margin-top:16px">
+                    <h3>Simular eventos del sistema</h3>
+                    <p style="color:var(--mu);font-size:13px;margin-bottom:14px">En el sistema real, estos eventos los
+                        dispara el backend al crear, asignar o actualizar un ticket.</p>
+                    <div class="row">
+                        <button class="btn" data-tipo="creado">Nuevo ticket creado</button>
+                        <button class="btn" data-tipo="asignado">Ticket asignado</button>
+                        <button class="btn" data-tipo="estado">Cambio de estado</button>
+                        <button class="btn" data-tipo="sla">SLA por vencer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
