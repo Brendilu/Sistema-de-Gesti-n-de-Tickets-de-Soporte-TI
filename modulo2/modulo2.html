@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Tickets + Fotos | Prototipo</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+<div class="app-container">
+    <!-- Columna izquierda: Formulario -->
+    <div class="form-card">
+        <h2>📋 Nuevo Ticket <span>prototipo</span></h2>
+        <div class="subtitle">Registra incidencias con evidencia fotográfica</div>
+
+        <form id="ticketForm">
+            <div class="form-group">
+                <label>Título del ticket <span class="required">*</span></label>
+                <input type="text" id="titulo" placeholder="Ej: Error al iniciar sesión" required>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción <span class="required">*</span></label>
+                <textarea id="descripcion" placeholder="Describe el problema con detalle..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Categoría / Prioridad <span class="required">*</span></label>
+                <select id="categoria">
+                    <option value="Alta">🔴 Alta</option>
+                    <option value="Media" selected>🟡 Media</option>
+                    <option value="Baja">🟢 Baja</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Adjuntar fotos (imágenes)</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" accept="image/*" multiple>
+                    <div class="preview-section" id="previewContainer"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submitBtn">📤 Registrar ticket</button>
+        </form>
+    </div>
+
+    <!-- Columna derecha: Dashboard -->
+    <div class="dashboard-card">
+        <div class="dashboard-header">
+            <h3>📌 Tickets registrados</h3>
+            <span class="badge-count" id="ticketCount">0</span>
+        </div>
+        <ul class="tickets-list" id="ticketsList">
+            <li class="empty-message">No hay tickets registrados aún.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal detalle -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal-content" id="modalContent">
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<!-- Visor de imagen completa -->
+<div class="full-image-preview" id="fullImagePreview">
+    <img src="" alt="Vista completa" id="fullImage">
+    <button class="close-preview" id="closeFullImage">&times;</button>
+</div>
+
+<!-- Toast -->
+<div class="toast-message" id="toast"></div>
+
+<script src="./js/app.js"></script>
+</body>
+</html>
