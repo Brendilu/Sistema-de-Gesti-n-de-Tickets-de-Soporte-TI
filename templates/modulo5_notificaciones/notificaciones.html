@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Módulo 5 · Notificaciones internas · Atlas Soporte</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filtros.css') }}">
+    <link rel="stylesheet" href="{{ url_for('modulo5.static', filename='css/modulo5_layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('modulo5.static', filename='css/modulo5_notificaciones.css') }}">
+</head>
+<body class="con-sb">
+
+    {% set modulo_activo = 'modulo5.notificaciones' %}
+    {% include 'partials/sidebar.html' %}
+
+    <!-- ========== BARRA SUPERIOR (con la campana) ========== -->
+    <header class="barra-superior">
+
+        <h1 class="barra-superior__titulo">Notificaciones</h1>
+
+        <div class="campana">
+            <button type="button" id="boton-campana" class="campana__boton"
+                    aria-label="Notificaciones" aria-expanded="false">
+                🔔
+                <span id="contador-notificaciones" class="campana__contador" hidden>0</span>
+            </button>
+
+            <section id="panel-notificaciones" class="campana__panel" hidden>
+                <header class="campana__panel-cabecera">
+                    <h2 class="campana__panel-titulo">Notificaciones</h2>
+                    <button type="button" id="boton-marcar-todas-panel" class="enlace-boton">
+                        Marcar todas como leídas
+                    </button>
+                </header>
+                <ul id="lista-panel" class="lista-notificaciones lista-notificaciones--panel"></ul>
+            </section>
+        </div>
+    </header>
+
+    <main class="contenedor">
+
+        <!-- ========== ENCABEZADO DEL MÓDULO ========== -->
+        <section class="encabezado-modulo">
+            <span class="encabezado-modulo__numero">5</span>
+            <div class="encabezado-modulo__cuerpo">
+                <h2 class="encabezado-modulo__titulo">Módulo 5 · Notificaciones internas</h2>
+                <div class="encabezado-modulo__columnas">
+                    <div>
+                        <h3 class="encabezado-modulo__subtitulo">Funcionalidades</h3>
+                        <p>Campana con contador, generación de notificación en eventos clave, marcar como leída.</p>
+                    </div>
+                    <div>
+                        <h3 class="encabezado-modulo__subtitulo">Aspectos técnicos</h3>
+                        <ul class="etiquetas">
+                            <li>Tabla notificaciones</li>
+                            <li>AJAX/fetch para el contador</li>
+                            <li>UPDATE masivo o individual</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== LISTA COMPLETA (Read / Update / Delete) ========== -->
+        <section class="seccion">
+            <div class="seccion__cabecera">
+                <div>
+                    <h2 class="seccion__titulo">Mis notificaciones</h2>
+                    <p class="seccion__descripcion">Actividad reciente en tus tickets. Haz clic en una para marcarla como leída.</p>
+                </div>
+                <div class="grupo-botones">
+                    <button type="button" id="boton-marcar-todas" class="boton">Marcar todas como leídas</button>
+                    <button type="button" id="boton-eliminar-leidas" class="boton boton--peligro">Eliminar leídas</button>
+                </div>
+            </div>
+
+            <div class="flt" id="filtros">
+                <div class="flt-b"><label for="f-q">Buscar</label>
+                    <input id="f-q" type="search" data-f="q" placeholder="Mensaje o ticket…" autocomplete="off"></div>
+                <div><label for="f-tipo">Tipo</label>
+                    <select id="f-tipo" data-f="tipo">
+                        <option value="">Todos</option>
+                        <option value="creado">Nuevo ticket creado</option>
+                        <option value="asignado">Ticket asignado</option>
+                        <option value="estado">Cambio de estado</option>
+                        <option value="sla">SLA por vencer</option>
+                    </select></div>
+                <div><label for="f-leida">Estado</label>
+                    <select id="f-leida" data-f="leida"><option value="">Todas</option><option value="no">Sin leer</option><option value="si">Leídas</option></select></div>
+                <div><label for="f-desde">Desde</label><input id="f-desde" type="date" data-f="desde"></div>
+                <div><label for="f-hasta">Hasta</label><input id="f-hasta" type="date" data-f="hasta"></div>
+                <button type="button" class="flt-x" data-f-limpiar>Limpiar</button>
+            </div>
+            <p class="flt-resumen" id="resumenFiltro"></p>
+
+            <div class="tarjeta tarjeta--lista">
+                <ul id="lista-completa" class="lista-notificaciones"></ul>
+            </div>
+        </section>
+
+        <!-- ========== FORMULARIO (Create) ========== -->
+        <section class="seccion">
+            <form id="formulario-notificacion" class="tarjeta" novalidate>
+                <h2 class="seccion__titulo">Generar notificación</h2>
+                <p class="seccion__descripcion">
+                    El sistema las crea solo cuando ocurre un evento clave del ticket (creación, asignación,
+                    cambio de estado, SLA). Aquí puedes generar una de prueba para ti.
+                </p>
+
+                <div class="formulario__fila">
+                    <div class="campo">
+                        <label for="campo-tipo" class="campo__etiqueta">Evento</label>
+                        <select id="campo-tipo" name="tipo" class="campo__control">
+                            <option value="creado">Nuevo ticket creado</option>
+                            <option value="asignado">Ticket asignado</option>
+                            <option value="estado">Cambio de estado</option>
+                            <option value="sla">SLA por vencer</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="campo-ticket" class="campo__etiqueta">Ticket (opcional)</label>
+                        <select id="campo-ticket" name="ticket_id" class="campo__control"></select>
+                    </div>
+
+                    <div class="campo campo--ancho">
+                        <label for="campo-mensaje" class="campo__etiqueta">Mensaje</label>
+                        <input type="text" id="campo-mensaje" name="mensaje" class="campo__control"
+                               maxlength="120" placeholder="Ej. El ticket #215 fue asignado a Ana Ruiz">
+                    </div>
+                </div>
+
+                <p id="error-mensaje" class="campo__error" role="alert"></p>
+                <button type="submit" class="boton boton--primario">Generar notificación</button>
+            </form>
+        </section>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+    <script src="{{ url_for('modulo5.static', filename='js/modulo5.js') }}"></script>
+</body>
+</html>

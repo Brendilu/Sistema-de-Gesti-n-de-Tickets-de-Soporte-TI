@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Módulo 4 · SLA + semáforo visual · Atlas Soporte</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('modulo4.static', filename='css/modulo4.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filtros.css') }}">
+</head>
+
+<body class="con-sb">
+    {% set modulo_activo = 'modulo4.sla' %}
+    {% include 'partials/sidebar.html' %}
+    <div class="app" data-es-admin="{{ 1 if usuario.rol_id == 1 else 0 }}" data-yo="{{ usuario.id }}">
+
+        <div>
+            <div class="top">
+                <h1>Tickets</h1>
+                <span class="sp"></span>
+                <span id="resumenTop" class="muted"></span>
+            </div>
+
+            <div class="c">
+
+                <div class="mh">
+                    <span class="mn">4</span>
+                    <div style="flex:1">
+                        <h2>Módulo 4 · SLA + semáforo visual</h2>
+                        <div class="mc">
+                            <div>
+                                <small>Funcionalidades</small>
+                                <p>Cálculo de tiempo transcurrido, semáforo verde/amarillo/rojo, alerta en listado de
+                                    tickets vencidos o por vencer.</p>
+                            </div>
+                            <div>
+                                <small>Aspectos técnicos</small>
+                                <div class="chips">
+                                    <span>Diferencia de timestamps</span>
+                                    <span>Lógica por prioridad (4h/24h/72h)</span>
+                                    <span>Clases CSS dinámicas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert" id="alertaSLA" role="alert" style="display:none"></div>
+                <div class="alert" id="msgError" role="alert" style="display:none"></div>
+
+                <section class="card form-card" aria-labelledby="tituloFormulario" style="margin-bottom:22px">
+                    <h3 id="tituloFormulario">Nuevo ticket</h3>
+                    <form id="formTicket" novalidate>
+                        <input type="hidden" id="ticketId" name="ticketId">
+
+                        <div class="fgrid">
+                            <div class="f wide">
+                                <label for="ticketTitulo">Título del ticket</label>
+                                <input type="text" id="ticketTitulo" class="in" name="titulo" minlength="5" maxlength="150"
+                                    placeholder="Ej: Caída de red en sede Lima" required>
+                                <small class="err" id="errorTitulo"></small>
+                            </div>
+
+                            <div class="f wide">
+                                <label for="ticketDescripcion">Descripción</label>
+                                <textarea id="ticketDescripcion" class="in" name="descripcion" rows="3"
+                                    placeholder="Describe el problema con el mayor detalle posible" required></textarea>
+                                <small class="err" id="errorDescripcion"></small>
+                            </div>
+
+                            <div class="f wide">
+                                <label for="ticketSolicitante">Solicitante</label>
+                                <select id="ticketSolicitante" class="in" name="solicitante_id" required></select>
+                                <small class="err" id="errorSolicitante"></small>
+                            </div>
+
+                            <div class="f">
+                                <label for="ticketPrioridad">Prioridad</label>
+                                <select id="ticketPrioridad" class="in" name="prioridad_id" required></select>
+                            </div>
+
+                            <div class="f">
+                                <label for="ticketTecnico">Técnico</label>
+                                <select id="ticketTecnico" class="in" name="tecnico_id"></select>
+                            </div>
+
+                            <div class="f">
+                                <label for="ticketEstado">Estado</label>
+                                <select id="ticketEstado" class="in" name="estado_id" required></select>
+                            </div>
+                        </div>
+
+                        <div class="acciones">
+                            <button type="submit" id="btnGuardar" class="btn p">Crear ticket</button>
+                            <button type="button" id="btnCancelar" class="btn" hidden>Cancelar edición</button>
+                        </div>
+                    </form>
+                </section>
+
+                <div class="hd">
+                    <div>
+                        <h2>Listado de tickets</h2>
+                        <p>Semáforo calculado según prioridad: Alta 4 h · Media 24 h · Baja 72 h</p>
+                    </div>
+                </div>
+
+                <div class="flt" id="filtros">
+                    <div class="flt-b"><label for="f-q">Buscar</label>
+                        <input id="f-q" type="search" data-f="q" placeholder="Código, título, solicitante o técnico…" autocomplete="off"></div>
+                    <div><label for="f-sem">Semáforo</label>
+                        <select id="f-sem" data-f="sem">
+                            <option value="">Todos</option>
+                            <option value="vencido">Vencidos</option>
+                            <option value="por-vencer">Por vencer</option>
+                            <option value="en-plazo">En plazo</option>
+                            <option value="cerrado">Cerrados</option>
+                        </select></div>
+                    <div><label for="f-prioridad">Prioridad</label><select id="f-prioridad" data-f="prioridad"></select></div>
+                    <div><label for="f-estado">Estado</label><select id="f-estado" data-f="estado"></select></div>
+                    <div><label for="f-tec">Técnico</label><select id="f-tec" data-f="tec"></select></div>
+                    <div><label for="f-desde">Desde</label><input id="f-desde" type="date" data-f="desde"></div>
+                    <div><label for="f-hasta">Hasta</label><input id="f-hasta" type="date" data-f="hasta"></div>
+                    <button type="button" class="flt-x" data-f-limpiar>Limpiar</button>
+                </div>
+                <p class="flt-resumen" id="resumenFiltro"></p>
+
+                <div class="card tw">
+                    <table class="tabla-res">
+                        <caption class="visually-hidden">Listado de tickets con su semáforo de SLA</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">SLA</th>
+                                <th scope="col">Ticket</th>
+                                <th scope="col">Prioridad</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Técnico</th>
+                                <th scope="col">Tiempo transcurrido</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketRows"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <dialog id="dialogoEliminar" class="confirm-dialog" aria-labelledby="dialogoTitulo">
+        <form method="dialog">
+            <span class="confirm-icon" aria-hidden="true">!</span>
+            <h2 id="dialogoTitulo">Eliminar ticket</h2>
+            <p id="dialogoMensaje"></p>
+            <div class="acciones" style="justify-content:flex-end">
+                <button type="submit" value="cancelar" id="btnDialogoCancelar" class="btn">Cancelar</button>
+                <button type="submit" value="confirmar" id="btnDialogoConfirmar" class="btn d">Eliminar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+    <script src="{{ url_for('modulo4.static', filename='js/modulo4.js') }}"></script>
+</body>
+
+</html>

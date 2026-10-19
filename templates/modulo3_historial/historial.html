@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Módulo 3 · Asignación e historial de estados · Atlas Soporte</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('modulo3.static', filename='css/modulo3.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/filtros.css') }}">
+</head>
+<body class="con-sb">
+{% set modulo_activo = 'modulo3.inicio' %}
+{% include 'partials/sidebar.html' %}
+<div class="app">
+
+ <div>
+  <div class="top">
+   <h1 id="tituloTop">Asignación e historial</h1>
+   <span class="sp"></span>
+   <span class="pill" id="estadoActualPill">—</span>
+  </div>
+
+  <div class="c" id="contenido" data-ticket-id="{{ ticket_id }}" data-rol="{{ usuario.rol_id }}">
+   <div class="mh">
+    <span class="mn">3</span>
+    <div style="flex:1">
+     <h2>Módulo 3 · Asignación + historial de estados</h2>
+     <div class="mc">
+      <div>
+       <small>Funcionalidades</small>
+       <p>Buscar y gestionar tickets, cambiar estado con comentario obligatorio. Cada técnico gestiona lo suyo; el administrador gestiona todo y ve el historial de todos.</p>
+      </div>
+      <div>
+       <small>Aspectos técnicos</small>
+       <div class="chips">
+        <span>Tabla ticket_historial</span><span>Permisos por rol</span><span>Filtros por fecha, estado y persona</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+
+   <!-- ====== Buscador de tickets ====== -->
+   <section class="card" style="margin-bottom:18px">
+    <h3>Buscar ticket para gestionar</h3>
+    <div class="flt" id="filtrosTicket">
+     <div class="flt-b"><label for="b-q">Buscar</label>
+      <input id="b-q" type="search" data-f="q" placeholder="Código, título, solicitante o técnico…" autocomplete="off"></div>
+     <div><label for="b-estado">Estado</label><select id="b-estado" data-f="estado"></select></div>
+     <div><label for="b-prioridad">Prioridad</label><select id="b-prioridad" data-f="prioridad"></select></div>
+     <div><label for="b-tec">Técnico</label><select id="b-tec" data-f="tec"></select></div>
+     <div><label for="b-desde">Desde</label><input id="b-desde" type="date" data-f="desde"></div>
+     <div><label for="b-hasta">Hasta</label><input id="b-hasta" type="date" data-f="hasta"></div>
+     <button type="button" class="flt-x" data-f-limpiar>Limpiar</button>
+    </div>
+    <p class="flt-resumen" id="resumenBusqueda"></p>
+    <ul class="res-list" id="resultados"></ul>
+   </section>
+
+   <!-- ====== Ticket elegido ====== -->
+   <div id="zonaTicket" hidden>
+    <div class="hd">
+     <div><h2 id="ticketTitulo">—</h2><p id="ticketSub"></p></div>
+     <a class="btn" href="/modulo4" style="text-decoration:none">Ver semáforo SLA →</a>
+    </div>
+
+    <div class="g3">
+     <div class="card">
+      <h3>Historial de este ticket</h3>
+      <p class="aviso-hist" id="avisoHist" hidden></p>
+      <div class="tl" id="timeline"></div>
+     </div>
+
+     <div class="card" style="align-self:start">
+      <h3>Gestionar ticket</h3>
+      <div class="gestor">
+       <small>Gestionando como</small>
+       <div id="gestor"></div>
+      </div>
+      <p class="bloqueo" id="bloqueo" hidden></p>
+      <div class="f">
+       <label for="tecnico">Técnico asignado</label>
+       <select id="tecnico" class="in"></select>
+       <small class="nota" id="notaTecnico" hidden></small>
+      </div>
+      <div class="f">
+       <label for="estado">Nuevo estado</label>
+       <select id="estado" class="in"></select>
+      </div>
+      <div class="f">
+       <label for="comentario">Comentario <small class="req">*</small></label>
+       <textarea id="comentario" class="in" placeholder="Describe lo realizado en este cambio"></textarea>
+       <small class="err" id="comentarioErr"></small>
+      </div>
+      <button class="btn p" id="btnGuardar" style="width:100%">Guardar cambio</button>
+      <p class="ok-msg" id="okMsg">✓ Cambio guardado en el historial.</p>
+     </div>
+    </div>
+   </div>
+
+   <!-- ====== Historial de acciones (según el rol) ====== -->
+   <section class="card" style="margin-top:18px">
+    <h3 id="tituloHistorial">Historial de acciones</h3>
+    <p class="aviso-hist" id="subHistorial"></p>
+    <div class="flt" id="filtrosHist">
+     <div class="flt-b"><label for="h-q">Buscar</label>
+      <input id="h-q" type="search" data-f="q" placeholder="Ticket, comentario o persona…" autocomplete="off"></div>
+     <div id="h-persona-grupo" hidden><label for="h-persona">Persona</label><select id="h-persona" data-f="usuario_id"></select></div>
+     <div><label for="h-estado">Pasó a estado</label><select id="h-estado" data-f="estado_id"></select></div>
+     <div><label for="h-desde">Desde</label><input id="h-desde" type="date" data-f="desde"></div>
+     <div><label for="h-hasta">Hasta</label><input id="h-hasta" type="date" data-f="hasta"></div>
+     <button type="button" class="flt-x" data-f-limpiar>Limpiar</button>
+    </div>
+    <p class="flt-resumen" id="resumenHist"></p>
+    <div class="tw">
+     <table class="tabla-res" id="tablaHist">
+      <thead><tr><th>Fecha</th><th>Quién</th><th>Ticket</th><th>Cambio</th><th>Comentario</th></tr></thead>
+      <tbody id="filasHist"></tbody>
+     </table>
+    </div>
+   </section>
+  </div>
+ </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+<script src="{{ url_for('modulo3.static', filename='js/modulo3.js') }}"></script>
+</body>
+</html>

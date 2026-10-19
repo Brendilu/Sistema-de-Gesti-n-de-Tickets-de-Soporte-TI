@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Módulo 1 · Iniciar sesión · Atlas Soporte</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('modulo1.static', filename='css/modulo1.css') }}">
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="brand"><span class="logo">A</span>Atlas Soporte · Módulo 1</div>
+
+        <!-- LOGIN -->
+        <div class="view on" id="v-login">
+            <div class="lg-box">
+                <div class="hd">
+                    <h2>Iniciar sesión</h2>
+                    <p>Acceso con correo corporativo.</p>
+                </div>
+                <div class="alert-ok" id="loginOk"></div>
+                <div class="alert-bad" id="loginError">Credenciales incorrectas.</div>
+                <form class="card" id="formLogin" novalidate>
+                    <div class="f"><label for="em">Correo</label><input id="em" class="in" type="email" autocomplete="username"
+                            placeholder="correo@empresa.com"></div>
+                    <div class="f"><label for="pw">Contraseña</label><input id="pw" type="password" class="in"
+                            autocomplete="current-password"></div>
+                    <button class="btn p" type="submit" style="width:100%;padding:11px">Entrar</button>
+                    <p class="switchview">¿No tienes cuenta? <button type="button" onclick="go('registro')">Registrarte</button></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- REGISTRO -->
+        <div class="view" id="v-registro">
+            <div class="lg-box">
+                <div class="hd">
+                    <h2>Crear cuenta</h2>
+                    <p>Se registra con rol "Usuario" por defecto; un administrador puede cambiarlo luego.
+                        Si tu correo coincide con el de un empleado, se vincula automáticamente.</p>
+                </div>
+                <div class="alert-bad" id="regError"></div>
+                <form class="card" id="formRegistro" novalidate>
+                    <div class="f"><label for="rc">Código de empresa</label><input id="rc" class="in"
+                            placeholder="Te lo da tu administrador" autocapitalize="none" autocomplete="off"></div>
+                    <div class="f"><label for="rn">Nombre completo</label><input id="rn" class="in"
+                            placeholder="Ej. Carlos Vega"></div>
+                    <div class="f"><label for="re">Correo</label><input id="re" class="in" type="email"
+                            placeholder="correo@empresa.com"></div>
+                    <div class="f"><label for="rp">Contraseña (mín. 6 caracteres)</label><input id="rp" type="password" class="in"
+                            autocomplete="new-password"></div>
+                    <button class="btn p" type="submit" style="width:100%;padding:11px">Crear cuenta</button>
+                    <p class="switchview"><button type="button" onclick="go('login')">← Volver a iniciar sesión</button></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('modulo1.static', filename='js/modulo1_login.js') }}"></script>
+</body>
+
+</html>

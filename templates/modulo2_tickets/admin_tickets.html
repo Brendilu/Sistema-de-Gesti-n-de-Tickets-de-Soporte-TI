@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2 · Panel Administrador - Gestión de Tickets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('modulo2.static', filename='css/modulo2_admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filtros.css') }}">
+</head>
+<body class="con-sb">
+    {% set modulo_activo = 'modulo2.admin' %}
+    {% include 'partials/sidebar.html' %}
+    <header class="admin-header">
+        <h1>Panel de Administración - Módulo 2: Control de Tickets</h1>
+        <p>Bienvenido, {{ usuario.nombre }} ({{ usuario.rol }})</p>
+    </header>
+
+    <main class="admin-container">
+        <section class="card-table">
+            <div class="table-header-flex">
+                <h2>Listado General de Tickets</h2>
+                <button id="btn-nuevo" class="btn btn-primary">+ NUEVO</button>
+            </div>
+            <p class="msg-error" id="msg-error" hidden></p>
+            <div class="flt" id="filtros">
+                <div class="flt-b"><label for="f-q">Buscar ticket</label>
+                    <input id="f-q" type="search" data-f="q" placeholder="Código, título, solicitante o técnico…" autocomplete="off"></div>
+                <div><label for="f-estado">Estado</label><select id="f-estado" data-f="estado"></select></div>
+                <div><label for="f-prioridad">Prioridad</label><select id="f-prioridad" data-f="prioridad"></select></div>
+                <div><label for="f-tecnico">Técnico</label><select id="f-tecnico" data-f="tecnico"></select></div>
+                <div><label for="f-desde">Desde</label><input id="f-desde" type="date" data-f="desde"></div>
+                <div><label for="f-hasta">Hasta</label><input id="f-hasta" type="date" data-f="hasta"></div>
+                <button type="button" class="flt-x" data-f-limpiar>Limpiar</button>
+            </div>
+            <p class="flt-resumen" id="resumen-filtro"></p>
+            <div class="table-responsive">
+                <table id="tickets-table" class="tabla-res">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Título</th>
+                            <th>Prioridad</th>
+                            <th>Estado</th>
+                            <th>Solicitante</th>
+                            <th>Técnico</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tickets-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Ventana Modal para Registrar / Editar Ticket -->
+    <div id="ticket-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Registrar / Editar Ticket</h2>
+                <button type="button" id="modal-close" class="btn-close">&times;</button>
+            </div>
+
+            <form id="ticket-form">
+                <input type="hidden" id="ticket-id">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codigo">Código:</label>
+                        <input type="text" id="codigo" readonly placeholder="Se genera automáticamente (TCK-XXXX)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="titulo">Título:</label>
+                        <input type="text" id="titulo" required minlength="5" maxlength="150" placeholder="Resumen del problema">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="descripcion">Descripción:</label>
+                        <textarea id="descripcion" rows="3" required placeholder="Detalle completo del incidente"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prioridad_id">Prioridad:</label>
+                        <select id="prioridad_id" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado_id">Estado:</label>
+                        <select id="estado_id" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="solicitante_id">Solicitante (empleado):</label>
+                        <select id="solicitante_id" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tecnico_id">Técnico asignado:</label>
+                        <select id="tecnico_id"></select>
+                    </div>
+
+                    <div class="form-group full-width" id="grupo-comentario">
+                        <label for="comentario">Comentario del cambio (se guarda en el historial):</label>
+                        <input type="text" id="comentario" maxlength="400" placeholder="Opcional. Solo aplica si cambias estado o técnico">
+                    </div>
+                </div>
+
+                <p class="msg-error" id="form-error" hidden></p>
+                <div class="form-actions">
+                    <button type="submit" id="btn-save" class="btn btn-primary">Guardar Ticket</button>
+                    <button type="button" id="btn-cancel" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+    <script src="{{ url_for('modulo2.static', filename='js/modulo2_admin.js') }}"></script>
+</body>
+</html>

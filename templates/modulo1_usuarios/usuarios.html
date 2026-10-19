@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Módulo 1 · Usuarios y roles · Atlas Soporte</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filtros.css') }}">
+    <link rel="stylesheet" href="{{ url_for('modulo1.static', filename='css/modulo1.css') }}">
+</head>
+
+<body class="con-sb">
+    {% set modulo_activo = 'modulo1.usuarios' %}
+    {% include 'partials/sidebar.html' %}
+    <div class="wrap">
+        <div class="view on" id="v-usuarios">
+            <div class="top-row">
+                <div class="hd" style="margin-bottom:0">
+                    <h2>Usuarios y roles</h2>
+                    <p>Sesión activa: <b id="whoami">{{ usuario.nombre }} ({{ usuario.rol }})</b></p>
+                </div>
+            </div>
+            <div class="alert-bad" id="msgError"></div>
+            <div class="flt" id="filtros">
+                <div class="flt-b"><label for="f-q">Buscar</label>
+                    <input id="f-q" type="search" data-f="q" placeholder="Nombre, correo, cargo o área…" autocomplete="off"></div>
+                <div><label for="f-rol">Rol</label><select id="f-rol" data-f="rol"></select></div>
+                <div><label for="f-activo">Estado</label>
+                    <select id="f-activo" data-f="activo"><option value="">Todos</option><option value="1">Activos</option><option value="0">Inactivos</option></select></div>
+                <div><label for="f-vinc">Empleado</label>
+                    <select id="f-vinc" data-f="vinc"><option value="">Todos</option><option value="si">Vinculados</option><option value="no">Sin vincular</option></select></div>
+                <button type="button" class="flt-x" data-f-limpiar>Limpiar</button>
+            </div>
+            <p class="flt-resumen" id="resumenFiltro"></p>
+            <div class="card tw" style="padding:6px">
+                <table id="userTable" class="tabla-res"></table>
+            </div>
+            <div class="tech"><span>Flask + sesión</span><span>hash de contraseñas</span><span>@rol_requerido</span><span>Tabla
+                    usuarios</span><span>Todas las rutas requieren sesión válida</span></div>
+        </div>
+    </div>
+
+    <!-- Modal de edición -->
+    <div class="modal-fondo" id="modalUsuario" hidden>
+        <form class="card modal-caja" id="formUsuario" novalidate>
+            <h3>Editar usuario</h3>
+            <input type="hidden" id="uId">
+            <div class="f"><label for="uNombre">Nombre</label><input id="uNombre" class="in"></div>
+            <div class="g2">
+                <div class="f"><label for="uRol">Rol</label><select id="uRol" class="in"></select></div>
+                <div class="f"><label for="uEmpleado">Empleado vinculado</label><select id="uEmpleado" class="in"></select></div>
+            </div>
+            <div class="f"><label for="uPass">Nueva contraseña (opcional)</label><input id="uPass" type="password" class="in"
+                    autocomplete="new-password" placeholder="Dejar vacío para no cambiarla"></div>
+            <small class="err" id="uError"></small>
+            <div style="display:flex;gap:10px;justify-content:flex-end">
+                <button type="button" class="btn" id="uCancelar">Cancelar</button>
+                <button type="submit" class="btn p">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+    <script src="{{ url_for('modulo1.static', filename='js/modulo1_usuarios.js') }}"></script>
+</body>
+
+</html>

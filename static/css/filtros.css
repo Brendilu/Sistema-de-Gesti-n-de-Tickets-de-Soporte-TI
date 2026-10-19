@@ -1,0 +1,49 @@
+/* ==========================================================================
+   filtros.css · Barra de filtros, distintivo del trabajador y tablas responsive
+   Se carga en todos los módulos DESPUÉS de su CSS propio.
+   ========================================================================== */
+:root {
+    --f-bd: #d9e1e4; --f-tx: #14232b; --f-mu: #6a7a82; --f-ac: #0f8b8d; --f-bg: #fff;
+}
+
+/* ---- Barra de filtros ---- */
+.flt {
+    display: grid; gap: 10px 12px; align-items: end;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    padding: 14px; margin: 0 0 14px; background: var(--f-bg);
+    border: 1px solid var(--f-bd); border-radius: 12px;
+    font: 500 13px/1.4 "Plus Jakarta Sans", system-ui, sans-serif; color: var(--f-tx);
+}
+.flt .flt-b { grid-column: span 2; }
+.flt label { display: block; margin: 0 0 4px; font-size: 12px; font-weight: 600; color: var(--f-mu); }
+.flt input, .flt select {
+    width: 100%; min-width: 0; height: 36px; padding: 0 10px; font: inherit; color: var(--f-tx);
+    background: #fff; border: 1px solid var(--f-bd); border-radius: 8px;
+}
+.flt input:focus, .flt select:focus { outline: 2px solid rgba(15, 139, 141, .35); border-color: var(--f-ac); }
+.flt .flt-x {
+    height: 36px; padding: 0 14px; font: 600 13px "Plus Jakarta Sans", system-ui, sans-serif; cursor: pointer;
+    color: var(--f-tx); background: #f1f5f6; border: 1px solid var(--f-bd); border-radius: 8px;
+}
+.flt .flt-x:hover { background: #e6eced; }
+.flt-resumen { margin: -6px 2px 12px; font-size: 12px; color: var(--f-mu); }
+
+/* ---- Tabla que se vuelve tarjetas en pantallas angostas ---- */
+.tabla-res { width: 100%; border-collapse: collapse; }
+@media (max-width: 760px) {
+    .tabla-res thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .tabla-res, .tabla-res tbody, .tabla-res tr, .tabla-res td { display: block; width: 100%; }
+    .tabla-res tr { padding: 10px 12px; margin: 0 0 10px; border: 1px solid var(--f-bd); border-radius: 10px; background: #fff; }
+    .tabla-res td { display: flex; gap: 10px; justify-content: space-between; align-items: center; padding: 6px 0 !important; border: 0 !important; text-align: right; }
+    .tabla-res td::before { content: attr(data-l); flex: none; font-size: 11px; font-weight: 700; color: var(--f-mu); text-transform: uppercase; letter-spacing: .3px; text-align: left; }
+    .tabla-res td[data-l=""]::before, .tabla-res td:not([data-l])::before { content: none; }
+    .tabla-res td .acciones, .tabla-res td .acc { justify-content: flex-end; flex-wrap: wrap; }
+    .tabla-res td > * { min-width: 0; max-width: 100%; }
+    .tabla-res td .dist-tx b, .tabla-res td .dist-tx small { white-space: normal; overflow: visible; text-align: left; }
+}
+@media (max-width: 560px) {
+    .flt { grid-template-columns: 1fr 1fr; padding: 12px; }
+    .flt .flt-b { grid-column: 1 / -1; }
+}
+@media (max-width: 380px) { .flt { grid-template-columns: 1fr; } }
+

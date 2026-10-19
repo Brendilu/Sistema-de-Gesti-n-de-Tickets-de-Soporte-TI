@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2 · Registro de tickets + fotos · Atlas Soporte</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('modulo2.static', filename='css/modulo2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filtros.css') }}">
+</head>
+<body class="con-sb">
+{% set modulo_activo = 'modulo2.registro' %}
+{% include 'partials/sidebar.html' %}
+<div class="app-container">
+    <!-- Columna izquierda: Formulario -->
+    <div class="form-card">
+        <h2>📋 Nuevo Ticket</h2>
+        <div class="subtitle">Registra incidencias con evidencia fotográfica</div>
+
+        <form id="ticketForm">
+            <div class="form-group" id="grupoSolicitante" hidden>
+                <label>Solicitante (empleado) <span class="required">*</span></label>
+                <select id="solicitante"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Título del ticket <span class="required">*</span></label>
+                <input type="text" id="titulo" placeholder="Ej: Error al iniciar sesión" minlength="5" maxlength="150" required>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción <span class="required">*</span></label>
+                <textarea id="descripcion" placeholder="Describe el problema con detalle..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Categoría / Prioridad <span class="required">*</span></label>
+                <select id="categoria"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Adjuntar fotos (imágenes)</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" accept="image/*" multiple>
+                    <div class="preview-section" id="previewContainer"></div>
+                </div>
+                <small class="foto-hint" id="fotoHint">Máximo 4 fotos · 5 MB cada una · 0/4</small>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submitBtn">📤 Registrar ticket</button>
+        </form>
+    </div>
+
+    <!-- Columna derecha: Dashboard -->
+    <div class="dashboard-card">
+        <div class="dashboard-header">
+            <h3>📌 <span id="tituloLista">Tickets registrados</span></h3>
+            <span class="badge-count" id="ticketCount">0</span>
+        </div>
+        <div class="flt" id="filtros">
+            <div class="flt-b"><label for="f-q">Buscar</label>
+                <input id="f-q" type="search" data-f="q" placeholder="Título, código o persona…" autocomplete="off"></div>
+            <div><label for="f-estado">Estado</label>
+                <select id="f-estado" data-f="estado"><option value="">Todos</option></select></div>
+            <div><label for="f-prioridad">Prioridad</label>
+                <select id="f-prioridad" data-f="prioridad"><option value="">Todas</option></select></div>
+            <div id="f-asig-grupo" hidden><label for="f-asig">Asignación</label>
+                <select id="f-asig" data-f="asig">
+                    <option value="">Todos</option><option value="mios">Asignados a mí</option><option value="libres">Sin asignar</option>
+                </select></div>
+            <div><label for="f-desde">Desde</label><input id="f-desde" type="date" data-f="desde"></div>
+            <div><label for="f-hasta">Hasta</label><input id="f-hasta" type="date" data-f="hasta"></div>
+            <button type="button" class="flt-x" data-f-limpiar>Limpiar</button>
+        </div>
+        <ul class="tickets-list" id="ticketsList">
+            <li class="empty-message">Cargando…</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal detalle -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal-content" id="modalContent">
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<!-- Visor de imagen completa -->
+<div class="full-image-preview" id="fullImagePreview">
+    <img src="" alt="Vista completa" id="fullImage">
+    <button class="close-preview" id="closeFullImage">&times;</button>
+</div>
+
+<!-- Toast -->
+<div class="toast-message" id="toast"></div>
+
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+<script src="{{ url_for('modulo2.static', filename='js/modulo2.js') }}"></script>
+</body>
+</html>

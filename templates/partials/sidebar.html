@@ -1,0 +1,21 @@
+{# Menú lateral compartido. Uso: <body class="con-sb"> y, dentro, {% set modulo_activo = 'endpoint' %}{% include 'partials/sidebar.html' %} #}
+<aside class="sb" aria-label="Módulos del sistema">
+    <a class="sb-brand" href="/"><span class="sb-logo">A</span>Atlas Soporte</a>
+    {% if usuario.empresa %}<span class="sb-titulo" title="Empresa">🏢 {{ usuario.empresa }}</span>{% endif %}
+    <span class="sb-titulo">Módulos del sistema</span>
+    {% for numero, etiqueta, endpoint, _roles in menu %}
+    <a class="sb-item {{ 'on' if modulo_activo == endpoint }}" href="{{ url_for(endpoint) }}">
+        <span class="sb-num">{{ numero }}</span><span>{{ etiqueta }}</span>
+        {% if endpoint == 'modulo5.notificaciones' %}<span class="gn-badge" data-contador-notif hidden>0</span>{% endif %}
+    </a>
+    {% endfor %}
+    <div class="sb-user" title="{{ usuario.nombre }}{% if usuario.cargo %} · {{ usuario.cargo }}{% endif %}">
+        <span class="dist-av" style="--h:{{ color_distintivo(usuario) }}">{{ iniciales }}</span>
+        <div class="sb-user-datos">
+            <b>{{ usuario.nombre }}</b>
+            {% if usuario.cargo %}<span>{{ usuario.cargo }}{% if usuario.area %} · {{ usuario.area }}{% endif %}</span>{% endif %}
+            <span class="sb-id">{% if usuario.empleado_id %}EMP-{{ '%04d' % usuario.empleado_id }} · {% endif %}{{ usuario.rol }}</span>
+            <a href="{{ url_for('modulo1.logout') }}">Cerrar sesión</a>
+        </div>
+    </div>
+</aside>
