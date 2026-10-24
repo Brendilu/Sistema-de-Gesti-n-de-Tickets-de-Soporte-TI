@@ -82,3 +82,14 @@ database/tickets_ti.sql      Estructura y datos de ejemplo
 - `MODULO 4/css/layout.css` y `MODULO 4/js/datos.js` no se usaban/no existían; el HTML del módulo 4 usaba clases que su CSS no definía, así que el template se rehízo con las clases de `modulo4.css` y se añadieron los estilos de formulario faltantes. `layout.css` quedó como `css/modulo4_layout.css` (sin enlazar).
 - `datos.js` del módulo 5 ya no hace falta: los datos vienen de la BD.
 - Las fuentes vienen de Google Fonts; sin internet se usa la fuente del sistema.
+
+
+EXPOSICION DEL DIA 2 DE NOVIEMBRE
+MODULO 1: FERNANDO
+MODULO 2:JOEL
+MODULO 3:FERNANDO
+MODULO 4:BRENDA
+MODULO 5: FLOR
+MODULO 6:JOEL
+MODULO 7:BRENDA
+MODULO 8:FLOR
