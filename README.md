@@ -86,6 +86,9 @@ database/tickets_ti.sql      Estructura y datos de ejemplo
 
 EXPOSICION DEL DIA 2 DE NOVIEMBRE
 MODULO 1: FERNANDO
+
+
+
 MODULO 2:JOEL
 Funcionalidades
 1. Dictado por voz: incorporar un botón de micrófono en el formulario de creación de tickets para que el usuario pueda describir su incidencia hablando en español.
@@ -107,9 +110,12 @@ Funcionalidades
 9. Control de privacidad: informar al usuario sobre el uso del micrófono y evaluar dónde se procesa el audio, especialmente si el reconocimiento depende de servicios externos.
 
 10. Pruebas de funcionamiento: verificar la transcripción en español, la edición del texto, el registro correcto del ticket y los casos de error.
+
+    
 MODULO 3:FERNANDO
 MODULO 4:BRENDA
 MODULO 5: FLOR
+
 MODULO 6:JOEL
 Funcionalidades
 1. Consulta de problemas: permitir que el usuario describa el problema técnico que está experimentando mediante un campo de texto.
