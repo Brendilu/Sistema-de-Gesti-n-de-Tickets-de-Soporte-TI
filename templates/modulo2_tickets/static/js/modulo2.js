@@ -182,7 +182,7 @@
             });
             if (fotos.length > 4) {
                 const more = document.createElement('span');
-                more.style.cssText = 'align-self:center;font-size:.75rem;color:#5e6f8d';
+                more.style.cssText = 'align-self:center;font-size:.75rem;font-weight:700;color:#5f7a82';
                 more.textContent = `+${fotos.length - 4}`;
                 thumbsDiv.appendChild(more);
             }
@@ -351,18 +351,15 @@
     const fileWrapper = document.querySelector('.file-input-wrapper');
     fileWrapper.addEventListener('dragover', (e) => {
         e.preventDefault();
-        fileWrapper.style.borderColor = '#3b7cc9';
-        fileWrapper.style.background = '#f0f7ff';
+        fileWrapper.classList.add('drag');
     });
     fileWrapper.addEventListener('dragleave', (e) => {
         e.preventDefault();
-        fileWrapper.style.borderColor = '#b9cee8';
-        fileWrapper.style.background = '#f8fafd';
+        fileWrapper.classList.remove('drag');
     });
     fileWrapper.addEventListener('drop', (e) => {
         e.preventDefault();
-        fileWrapper.style.borderColor = '#b9cee8';
-        fileWrapper.style.background = '#f8fafd';
+        fileWrapper.classList.remove('drag');
         if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
     });
 

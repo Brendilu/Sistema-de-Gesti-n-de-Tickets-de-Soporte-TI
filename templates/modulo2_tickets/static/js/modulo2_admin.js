@@ -63,24 +63,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderTickets();
     }
 
+    // Insignias de color para prioridad y estado (solo presentación)
+    const slug = v => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const pill = (txt, pref) => `<span class="pill ${pref}-${esc(slug(txt))}">${esc(txt)}</span>`;
+
     function renderTickets() {
         const lista = filtrados();
         document.getElementById('resumen-filtro').textContent =
             tickets.length ? `Mostrando ${lista.length} de ${tickets.length} tickets` : '';
         if (tickets.length === 0) {
-            ticketsTbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">No hay tickets registrados en el sistema.</td></tr>`;
+            ticketsTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #5f7a82;">No hay tickets registrados en el sistema.</td></tr>`;
             return;
         }
         if (lista.length === 0) {
-            ticketsTbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">Ningún ticket coincide con los filtros.</td></tr>`;
+            ticketsTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #5f7a82;">Ningún ticket coincide con los filtros.</td></tr>`;
             return;
         }
         ticketsTbody.innerHTML = lista.map(t => `
             <tr>
                 <td data-l="Código"><strong>${esc(t.codigo)}</strong></td>
                 <td data-l="Título">${esc(t.titulo)}</td>
-                <td data-l="Prioridad">${esc(t.prioridad)}</td>
-                <td data-l="Estado">${esc(t.estado)}</td>
+                <td data-l="Prioridad">${pill(t.prioridad, 'pr')}</td>
+                <td data-l="Estado">${pill(t.estado, 'es')}</td>
                 <td data-l="Solicitante">${distintivo({ nombre: t.solicitante, cargo: t.cargo, area: t.area })}</td>
                 <td data-l="Técnico">${t.tecnico ? esc(t.tecnico) : 'Sin asignar'}</td>
                 <td data-l="Acciones"><div class="acc">
