@@ -82,3 +82,68 @@ database/tickets_ti.sql      Estructura y datos de ejemplo
 - `MODULO 4/css/layout.css` y `MODULO 4/js/datos.js` no se usaban/no existían; el HTML del módulo 4 usaba clases que su CSS no definía, así que el template se rehízo con las clases de `modulo4.css` y se añadieron los estilos de formulario faltantes. `layout.css` quedó como `css/modulo4_layout.css` (sin enlazar).
 - `datos.js` del módulo 5 ya no hace falta: los datos vienen de la BD.
 - Las fuentes vienen de Google Fonts; sin internet se usa la fuente del sistema.
+
+
+EXPOSICION DEL DIA 2 DE NOVIEMBRE
+MODULO 1: FERNANDO
+
+
+
+MODULO 2:JOEL
+Funcionalidades
+1. Dictado por voz: incorporar un botón de micrófono en el formulario de creación de tickets para que el usuario pueda describir su incidencia hablando en español.
+
+2. Transcripción automática: convertir la voz del usuario en texto mediante reconocimiento de voz.
+
+3. Autocompletado del formulario: utilizar el texto transcrito para completar automáticamente el asunto y la descripción del ticket.
+
+4. Edición de la transcripción: permitir que el usuario corrija, elimine o modifique el texto reconocido antes de registrar el ticket.
+
+5. Indicador de grabación: mostrar visualmente cuándo el micrófono está activo y cuándo se ha detenido la captura de voz.
+
+6. Validación de compatibilidad: verificar si el navegador admite el reconocimiento de voz y mostrar un mensaje cuando la funcionalidad no esté disponible.
+
+7. Manejo de permisos y errores: informar al usuario si deniega el acceso al micrófono, si ocurre un error durante el reconocimiento o si no se obtiene una transcripción.
+
+8. Integración con el registro de tickets: guardar el asunto y la descripción transcritos y corregidos en la base de datos mediante el procedimiento habitual de creación de tickets.
+
+9. Control de privacidad: informar al usuario sobre el uso del micrófono y evaluar dónde se procesa el audio, especialmente si el reconocimiento depende de servicios externos.
+
+10. Pruebas de funcionamiento: verificar la transcripción en español, la edición del texto, el registro correcto del ticket y los casos de error.
+
+    
+MODULO 3:FERNANDO
+MODULO 4:BRENDA
+MODULO 5: FLOR
+
+MODULO 6:JOEL
+Funcionalidades
+1. Consulta de problemas: permitir que el usuario describa el problema técnico que está experimentando mediante un campo de texto.
+
+2. Búsqueda de artículos relacionados: consultar la base de conocimiento del sistema para encontrar artículos, procedimientos y soluciones relacionados con el problema descrito.
+
+3. Generación de soluciones mediante IA: enviar la descripción del problema y los artículos recuperados a una API de un modelo de lenguaje para generar recomendaciones.
+
+4. Respuestas basadas en documentación: configurar el asistente para que utilice los artículos recuperados y comunique claramente cuando no exista información suficiente para recomendar una solución.
+
+5. Visualización de artículos de origen: mostrar los títulos de los artículos utilizados para elaborar la respuesta, permitiendo identificar de dónde proviene la información.
+
+6. Presentación de pasos de solución: ofrecer instrucciones claras y ordenadas para que el usuario pueda intentar resolver el problema por su cuenta.
+
+7. Opción de confirmar la solución: permitir que el usuario indique si la recomendación resolvió su problema.
+
+8. Creación de ticket desde el asistente: incorporar el botón «No resolvió mi problema, crear ticket», conservando la descripción original para evitar que el usuario tenga que escribirla nuevamente.
+
+9. Registro de consultas resueltas: almacenar las consultas que el usuario marque como resueltas sin generar un ticket.
+
+10. Registro de consultas no resueltas: contabilizar las consultas que terminan en la creación de un ticket para evaluar la utilidad del asistente.
+
+11. Manejo de errores de la API: mostrar mensajes cuando el servicio de inteligencia artificial no esté disponible, se exceda el límite de solicitudes o se produzca un error de conexión.
+
+12. Control de costos: limitar las consultas, la cantidad de información enviada al modelo y el tamaño de las respuestas para reducir el consumo de la API.
+
+13. Protección de credenciales: guardar las claves de la API en variables de entorno y evitar exponerlas en el código del frontend o en el repositorio.
+
+14. Pruebas de funcionamiento: comprobar que las respuestas utilicen artículos existentes, que se muestren las fuentes correctas, que se registren las consultas y que se pueda crear un ticket cuando la solución no funcione.
+MODULO 7:BRENDA
+MODULO 8:FLOR
