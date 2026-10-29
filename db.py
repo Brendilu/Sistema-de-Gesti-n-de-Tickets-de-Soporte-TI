@@ -1,33 +1,57 @@
-"""Acceso a la base de datos (MySQL / MariaDB). Local con XAMPP o en línea: se configura por variables de entorno."""
+"""Acceso a la base de datos (SQLite en PythonAnywhere gratuito)."""
 import os
+import sqlite3
 from contextlib import contextmanager
+from datetime import datetime
 
-import pymysql
+RUTA_BD = os.getenv(
+    "DB_PATH",
+    "/home/aplicacioneswebgrupo5/mysite/database/tickets_ti.db",
+)
+
+# Las columnas DATETIME vuelven como datetime (igual que con pymysql)
+sqlite3.register_converter("DATETIME", lambda b: datetime.fromisoformat(b.decode()))
+sqlite3.register_adapter(datetime, lambda d: d.isoformat(" "))
+
+
+def _dict_factory(cursor, row):
+    return {col[0]: row[i] for i, col in enumerate(cursor.description)}
+
+
+class _Cursor:
+    """Envuelve el cursor para aceptar %s (estilo pymysql)."""
+
+    def __init__(self, cur):
+        self._cur = cur
+
+    def execute(self, sql, params=None):
+        self._cur.execute(sql.replace("%s", "?"), params or ())
+        return self
+
+    def executemany(self, sql, seq):
+        self._cur.executemany(sql.replace("%s", "?"), seq)
+        return self
+
+    def __getattr__(self, nombre):
+        return getattr(self._cur, nombre)
 
 
 def obtener_conexion():
-    return pymysql.connect(host=os.getenv("DB_HOST", "localhost"),
-                           port=int(os.getenv("DB_PORT", "3306")),
-                           user=os.getenv("DB_USER", "root"),
-                           password=os.getenv("DB_PASSWORD", ""),
-                           database=os.getenv("DB_NAME", "tickets_ti"),
-                           charset="utf8mb4",
-                           cursorclass=pymysql.cursors.DictCursor)
+    con = sqlite3.connect(RUTA_BD, detect_types=sqlite3.PARSE_DECLTYPES)
+    con.row_factory = _dict_factory
+    con.execute("PRAGMA foreign_keys = ON")
+    return con
 
 
 @contextmanager
 def conexion():
     """Entrega un cursor dentro de una transacción.
 
-        with conexion() as cur:
-            cur.execute("SELECT ...")
-
     Hace commit al salir bien y rollback si ocurre una excepción.
     """
     con = obtener_conexion()
     try:
-        with con.cursor() as cur:
-            yield cur
+        yield _Cursor(con.cursor())
         con.commit()
     except Exception:
         con.rollback()

@@ -3,6 +3,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+SQLALCHEMY_DATABASE_URI = "sqlite:////home/aplicacioneswebgrupo5/mysite/database/tickets_ti.db"
+
 # ---- Flask ----
 SECRET_KEY = os.getenv("SECRET_KEY", "cambia-esta-clave-en-produccion")
 # En línea (HTTPS) pon SESSION_COOKIE_SECURE=1 para que la cookie de sesión solo viaje cifrada.

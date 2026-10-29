@@ -1,6 +1,7 @@
 """Lógica de negocio compartida entre módulos (tickets, historial, SLA, notificaciones)."""
 import os
 import pymysql
+import sqlite3
 
 from config import ROL_ADMIN, ROL_TECNICO, UMBRAL_POR_VENCER, UPLOAD_FOLDER
 
@@ -53,7 +54,7 @@ SELECT t.id, t.codigo, t.titulo, t.descripcion,
        t.solicitante_id, emp.nombre_completo AS solicitante, emp.cargo AS cargo, ar.nombre AS area,
        t.tecnico_id, u.nombre AS tecnico,
        t.empresa_id, t.creado_en, t.actualizado_en, t.cerrado_en,
-       TIMESTAMPDIFF(SECOND, t.creado_en, COALESCE(t.cerrado_en, NOW())) AS segundos,
+       CAST((julianday(COALESCE(t.cerrado_en, datetime('now'))) - julianday(t.creado_en)) * 86400 AS INTEGER) AS segundos,
        (SELECT COUNT(*) FROM ticket_adjuntos a WHERE a.ticket_id = t.id) AS num_adjuntos
   FROM tickets t
   JOIN prioridades p   ON p.id = t.prioridad_id
@@ -120,7 +121,7 @@ def generar_alertas_sla(cur, empresa_id):
     cur.execute(
         SELECT_TICKETS + """
         WHERE t.empresa_id = %s AND e.es_final = FALSE
-          AND TIMESTAMPDIFF(SECOND, t.creado_en, NOW()) >= p.sla_horas * 3600 * %s
+          AND (julianday('now') - julianday(t.creado_en)) * 86400 >= p.sla_horas * 3600 * %s
           AND NOT EXISTS (SELECT 1 FROM notificaciones n WHERE n.ticket_id = t.id AND n.tipo = 'sla')
         """, (empresa_id, UMBRAL_POR_VENCER))
     for t in [enriquecer(f) for f in cur.fetchall()]:
@@ -135,7 +136,7 @@ def generar_alertas_sla(cur, empresa_id):
 # ----------------------------------------------------------------- tickets ----
 def siguiente_codigo(cur, empresa_id):
     """Cada empresa lleva su propia numeración (TCK-0001, ...)."""
-    cur.execute("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 5) AS UNSIGNED)), 0) + 1 AS n "
+    cur.execute("SELECT COALESCE(MAX(CAST(SUBSTR(codigo, 5) AS INTEGER)), 0) + 1 AS n "
                 "FROM tickets WHERE empresa_id=%s", (empresa_id,))
     return f"TCK-{int(cur.fetchone()['n']):04d}"
 
@@ -173,11 +174,16 @@ def crear_ticket(cur, *, empresa_id, titulo, descripcion, prioridad_id, estado_i
             cur.execute(
                 "INSERT INTO tickets (empresa_id, codigo, titulo, descripcion, prioridad_id, estado_id, "
                 "solicitante_id, tecnico_id, cerrado_en) "
-                "VALUES (%s,%s,%s,%s,%s,%s,%s,%s, IF((SELECT es_final FROM estados WHERE id=%s), NOW(), NULL))",
+                "VALUES (%s,%s,%s,%s,%s,%s,%s,%s, "
+                "CASE WHEN (SELECT es_final FROM estados WHERE id=%s) THEN datetime('now') ELSE NULL END)",
                 (empresa_id, codigo, titulo, descripcion, prioridad_id, estado_id, solicitante_id, tecnico_id, estado_id))
             break
-        except pymysql.err.IntegrityError as e:
-            if e.args[0] != 1062:
+        except (pymysql.err.IntegrityError, sqlite3.IntegrityError) as e:
+            if isinstance(e, pymysql.err.IntegrityError):
+                duplicado = e.args[0] == 1062
+            else:
+                duplicado = "UNIQUE" in str(e).upper()
+            if not duplicado:
                 raise
     else:
         raise ErrorNegocio("No se pudo generar un código de ticket único. Intenta de nuevo.", 409)
@@ -199,7 +205,8 @@ def actualizar_ticket(cur, empresa_id, ticket_id, cambios, usuario_id, comentari
     """UPDATE de un ticket. `cambios` puede traer: titulo, descripcion, prioridad_id,
     estado_id, solicitante_id, tecnico_id. Si cambia el estado o el técnico (o se escribe
     un comentario) se registra una fila en ticket_historial, todo en la misma transacción."""
-    cur.execute("SELECT * FROM tickets WHERE id=%s AND empresa_id=%s FOR UPDATE", (ticket_id, empresa_id))
+    # SQLite no admite "FOR UPDATE"; la transacción ya bloquea la escritura.
+    cur.execute("SELECT * FROM tickets WHERE id=%s AND empresa_id=%s", (ticket_id, empresa_id))
     actual = cur.fetchone()
     if not actual:
         raise ErrorNegocio("El ticket no existe.", 404)
@@ -222,7 +229,7 @@ def actualizar_ticket(cur, empresa_id, ticket_id, cambios, usuario_id, comentari
     cur.execute("SELECT es_final FROM estados WHERE id=%s", (nuevo["estado_id"],))
     es_final = bool(cur.fetchone()["es_final"])
     if es_final:
-        cerrado_en_sql = "COALESCE(cerrado_en, NOW())"
+        cerrado_en_sql = "COALESCE(cerrado_en, datetime('now'))"
     else:
         cerrado_en_sql = "NULL"
 

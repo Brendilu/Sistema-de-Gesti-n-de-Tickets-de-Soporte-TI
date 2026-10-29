@@ -10,7 +10,7 @@ from flask.json.provider import DefaultJSONProvider
 import config
 from auth import usuario_actual
 from templates import (catalogos, modulo1_usuarios, modulo2_tickets, modulo3_historial,
-                       modulo4_sla, modulo5_notificaciones, plataforma)
+                       modulo4_sla, modulo5_notificaciones)
 from servicios import ErrorNegocio
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -51,7 +51,7 @@ def crear_app():
     os.makedirs(config.UPLOAD_FOLDER, exist_ok=True)
 
     for modulo in (modulo1_usuarios, catalogos, modulo2_tickets, modulo3_historial,
-                   modulo4_sla, modulo5_notificaciones, plataforma):
+                   modulo4_sla, modulo5_notificaciones):
         app.register_blueprint(modulo.bp)
 
     def color_distintivo(u):
@@ -81,7 +81,7 @@ def crear_app():
     @app.errorhandler(pymysql.err.OperationalError)
     def _bd(e):
         app.logger.exception(e)
-        msg = "No se pudo conectar con la base de datos. ¿Está encendido MySQL en XAMPP y existe tickets_ti?"
+        msg = "No se pudo conectar con la base de datos."
         return _json(msg, 503) if request.path.startswith("/api/") else (msg, 503)
 
     @app.errorhandler(ValueError)
