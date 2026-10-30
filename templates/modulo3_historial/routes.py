@@ -39,7 +39,7 @@ def api_gestion(tid):
     cambios = {"estado_id": entero(d.get("estado_id"), "estado", obligatorio=True),
                "tecnico_id": entero(d.get("tecnico_id"), "técnico")}
     with conexion() as cur:
-        cur.execute("SELECT tecnico_id FROM tickets WHERE id=%s AND empresa_id=%s FOR UPDATE",
+        cur.execute("SELECT tecnico_id FROM tickets WHERE id=%s AND empresa_id=%s",
                     (tid, u["empresa_id"]))
         t = cur.fetchone()
         if not t:

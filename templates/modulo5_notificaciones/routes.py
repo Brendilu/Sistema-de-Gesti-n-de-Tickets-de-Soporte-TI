@@ -24,7 +24,7 @@ def api_listar():
         generar_alertas_sla(cur, u["empresa_id"])
         cur.execute(
             "SELECT n.id, n.ticket_id, n.tipo, n.titulo, n.mensaje, n.leida, n.creada_en, "
-            "TIMESTAMPDIFF(SECOND, n.creada_en, NOW()) AS hace_segundos, t.codigo AS ticket "
+            "CAST((julianday('now') - julianday(n.creada_en)) * 86400 AS INTEGER)"
             "FROM notificaciones n LEFT JOIN tickets t ON t.id = n.ticket_id "
             "WHERE n.usuario_id=%s ORDER BY n.creada_en DESC, n.id DESC LIMIT 200", (uid,))
         filas = cur.fetchall()
