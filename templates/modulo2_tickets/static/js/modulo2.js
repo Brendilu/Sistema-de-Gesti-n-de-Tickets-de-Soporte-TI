@@ -326,6 +326,8 @@
         datos.append('descripcion', descripcion);
         datos.append('prioridad_id', categoriaSelect.value);
         if (esPersonal()) datos.append('solicitante_id', solicitanteSelect.value);
+        // Si el ticket viene del asistente con IA («No resolvió mi problema»), se enlaza la consulta
+        if (window.M2Asistente && window.M2Asistente.consultaId) datos.append('consulta_id', window.M2Asistente.consultaId);
         pendingFiles.forEach(f => datos.append('fotos', f));
 
         try {
@@ -336,6 +338,7 @@
             renderPreview();
             categoriaSelect.value = prioridades.find(p => p.nombre === 'Media')?.id ?? prioridades[0].id;
             showToast(`Ticket ${r.codigo} registrado con ${r.fotos} foto(s)`, 3000);
+            if (window.M2Asistente) window.M2Asistente.alCrearTicket();
             cargarTickets();
         } catch (err) {
             showToast(err.message, 4000);

@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('modulo2.static', filename='css/modulo2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('modulo2.static', filename='css/modulo2_ia.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/filtros.css') }}">
 </head>
 <body class="con-sb">
@@ -19,7 +20,35 @@
         <h2>📋 Nuevo Ticket</h2>
         <div class="subtitle">Registra incidencias con evidencia fotográfica</div>
 
+        <!-- Asistente con IA: sugiere soluciones de la base de conocimiento antes de crear el ticket -->
+        <section class="ia-box" id="iaBox">
+            <button type="button" class="ia-toggle" id="iaToggle" aria-expanded="false" aria-controls="iaCuerpo">
+                🤖 <b>¿Probamos resolverlo antes de crear el ticket?</b><span>Asistente con IA</span>
+            </button>
+            <div class="ia-cuerpo" id="iaCuerpo" hidden>
+                <label for="iaConsulta">Describe tu problema</label>
+                <textarea id="iaConsulta" maxlength="500" rows="3" placeholder="Ej: La impresora del piso 2 no imprime mis documentos"></textarea>
+                <div class="ia-fila">
+                    <button type="button" class="btn-ia" id="iaBuscar">🔎 Buscar solución</button>
+                    <small>🔒 No escribas contraseñas ni datos personales: la consulta se envía a un servicio de IA externo.</small>
+                </div>
+                <div id="iaResultado" aria-live="polite"></div>
+                <div class="ia-acciones" id="iaAcciones"></div>
+                <div class="ia-stats" id="iaStats" hidden></div>
+            </div>
+        </section>
+
         <form id="ticketForm">
+            <!-- Dictado por voz (Web Speech API) -->
+            <div class="voz-box">
+                <button type="button" class="btn-voz" id="btnVoz" aria-pressed="false">
+                    <span class="voz-ico" aria-hidden="true">🎤</span><span id="btnVozTxt">Dictar incidencia</span>
+                </button>
+                <span class="voz-estado" id="vozEstado" role="status" aria-live="polite"></span>
+                <div class="voz-vivo" id="vozVivo" hidden></div>
+                <small class="voz-priv">🔒 Al dictar, tu navegador envía el audio a su servicio de reconocimiento de voz (en Chrome o Edge, un servidor externo). Este sistema no guarda el audio, solo el texto que registres. Podrás corregirlo antes de enviar.</small>
+            </div>
+
             <div class="form-group" id="grupoSolicitante" hidden>
                 <label>Solicitante (empleado) <span class="required">*</span></label>
                 <select id="solicitante"></select>
@@ -100,5 +129,7 @@
 <script src="{{ url_for('static', filename='js/api.js') }}"></script>
 <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
 <script src="{{ url_for('modulo2.static', filename='js/modulo2.js') }}"></script>
+<script src="{{ url_for('modulo2.static', filename='js/modulo2_voz.js') }}"></script>
+<script src="{{ url_for('modulo2.static', filename='js/modulo2_asistente.js') }}"></script>
 </body>
 </html>

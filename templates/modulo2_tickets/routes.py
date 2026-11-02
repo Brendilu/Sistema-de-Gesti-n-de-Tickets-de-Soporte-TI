@@ -14,9 +14,14 @@ from servicios import (ErrorNegocio, actualizar_ticket, borrar_archivos, crear_t
                        eliminar_ticket, generar_alertas_sla, listar_tickets, puede_gestionar)
 from utiles import cuerpo, entero
 
+from . import asistente
+
 bp = Blueprint("modulo2", __name__,
                static_folder="static", static_url_path="/modulo2/static")
 PERSONAL = (ROL_ADMIN, ROL_TECNICO)
+
+# Asistente con IA (base de conocimiento): rutas /api/asistente/... y /api/kb/... (ver asistente.py)
+asistente.registrar(bp)
 
 
 # ------------------------------------------------------------------ vistas ----
@@ -164,6 +169,10 @@ def api_crear():
                 prioridad_id=entero(d.get("prioridad_id"), "prioridad") or 2,
                 estado_id=estado_id, solicitante_id=solicitante_id,
                 tecnico_id=tecnico_id, usuario_id=u["id"])
+            # Si el ticket nació desde el asistente («No resolvió mi problema»), se enlaza la consulta
+            consulta_id = entero(d.get("consulta_id"), "consulta")
+            if consulta_id:
+                asistente.vincular_ticket(cur, consulta_id, tid, u)
             if fotos:
                 os.makedirs(os.path.join(UPLOAD_FOLDER, str(tid)), exist_ok=True)
             for f in fotos:
