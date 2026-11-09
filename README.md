@@ -159,6 +159,7 @@ Funcionalidades
 13. Protección de credenciales: guardar las claves de la API en variables de entorno y evitar exponerlas en el código del frontend o en el repositorio.
 
 14. Pruebas de funcionamiento: comprobar que las respuestas utilicen artículos existentes, que se muestren las fuentes correctas, que se registren las consultas y que se pueda crear un ticket cuando la solución no funcione.
+
 MODULO 7:BRENDA
 Detectar automáticamente los tickets que superan su tiempo máximo de atención, escalarlos al supervisor y enviar notificaciones push, incluyendo una alerta previa al técnico.
 
