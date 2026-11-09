@@ -113,7 +113,21 @@ Funcionalidades
 
     
 MODULO 3:FERNANDO
+
 MODULO 4:BRENDA
+Enviar automáticamente una notificación al celular del técnico cuando se le asigna o reasigna un ticket, incluyendo su código, prioridad y enlace de acceso. Además, registrar el estado de los mensajes en la base de datos.
+Alternativas investigadas
+	Twilio WhatsApp: permite enviar mensajes mediante una API, pero su sandbox tiene restricciones y requiere una configuración adicional para producción.
+	Twilio SMS: permite enviar mensajes directamente al número telefónico, aunque tiene un costo por mensaje y depende de la cobertura del operador.
+	Telegram Bot API: permite enviar notificaciones mediante un bot, sin pagar por cada mensaje, pero requiere que el técnico tenga Telegram y vincule su cuenta.
+Alternativa escogida y justificación
+Para mi proyecto, inicialmente probé Twilio con WhatsApp y SMS. Sin embargo, debido a las restricciones del sandbox de WhatsApp y los costos del servicio, decidí implementar Telegram Bot API como alternativa principal.
+Esta opción me permitió integrar un bot con Flask, vincular las cuentas de los técnicos y enviar avisos de los tickets, manteniendo un registro de las notificaciones en la base de datos.
+Ventajas y desventajas
+	Ventajas: es gratuito para este uso, permite automatizar mensajes, ofrece una integración sencilla mediante API y evita los costos por SMS.
+	Desventajas: requiere conexión a Internet, tener Telegram instalado y vincular previamente la cuenta del técnico. Además, no sustituye literalmente el envío de WhatsApp o SMS solicitado inicialmente.
+
+
 MODULO 5: FLOR
 
 MODULO 6:JOEL
@@ -146,4 +160,23 @@ Funcionalidades
 
 14. Pruebas de funcionamiento: comprobar que las respuestas utilicen artículos existentes, que se muestren las fuentes correctas, que se registren las consultas y que se pueda crear un ticket cuando la solución no funcione.
 MODULO 7:BRENDA
+Detectar automáticamente los tickets que superan su tiempo máximo de atención, escalarlos al supervisor y enviar notificaciones push, incluyendo una alerta previa al técnico.
+
+Alternativas investigadas
+	APScheduler: permite ejecutar tareas periódicas desde Python, pero requiere controlar su ejecución para evitar procesos duplicados en aplicaciones web.
+	Celery: permite gestionar tareas en segundo plano y colas de trabajo, aunque necesita infraestructura adicional, como Redis.
+	Cron-job.org: permite programar solicitudes HTTP periódicas hacia el servidor, sin mantener un proceso permanente dentro de Flask.
+	Web Push API: permite enviar notificaciones del navegador mediante un Service Worker y claves VAPID.
+
+Alternativa escogida y justificación
+Para este módulo decidí utilizar cron-job.org junto con Web Push API.
+Escogí cron-job.org porque mi aplicación está alojada en PythonAnywhere y necesitaba ejecutar revisiones automáticas sin bloquear Flask. El proceso comprueba los tiempos SLA configurados por prioridad y genera los escalamientos correspondientes.
+También implementé Web Push mediante un Service Worker y claves VAPID, para enviar avisos al técnico antes del vencimiento y al supervisor cuando el ticket supera su plazo. Durante las pruebas comprobé la recepción de una notificación real de escalamiento en Windows.
+
+Ventajas y desventajas
+	Ventajas: automatiza el control de los SLA, permite configurar tiempos por prioridad, reduce la supervisión manual y envía notificaciones del navegador sin necesidad de una aplicación móvil nativa.
+
+	Desventajas: depende de la ejecución programada y de la conexión a Internet. Además, las notificaciones requieren permisos del navegador, suscripciones activas y compatibilidad del dispositivo.
+
+
 MODULO 8:FLOR
